@@ -17,6 +17,17 @@ import cv2
 # cv2.waitKey(0)
 # t = 2
 
-import pandas as pd
-x = pd.read_pickle("D:/桌面/test2/resize_imgs")
-t = 3
+# import pandas as pd
+# x = pd.read_pickle("D:/桌面/test2/resize_imgs")
+# for i in range(len(x)):
+#     cv2.imshow("pic" + str(i), x[i])
+# cv2.waitKey(0)
+
+# x = "cec.4"
+# y = x.split(".")[1]
+# yy = ["234", "DVC订单", '3dd']
+# print("DVC订单" in yy)
+
+print("第%d个" % 4)
+
+
