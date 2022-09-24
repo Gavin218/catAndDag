@@ -21,8 +21,7 @@ def readPicturesAndResizeThenOutput(input_path, suffix_list, X_size, Y_size, out
         pickle.dump(new_file_list, f)  # 以list格式存储
 
         # 若想存储为ndarray格式，则用以下函数
-        # dim = [len(new_file_list), X_size, Y_size, 3]  # 若彩色图片默认为3
-        # pickle.dump(list2Array(new_file_list, dim))
+        # pickle.dump(list2Array(new_file_list))
     print("已成功存入指定文件！")
     return 0
 
@@ -34,27 +33,26 @@ def readPicturesAndResizeThenOutput(input_path, suffix_list, X_size, Y_size, out
 # readPicturesAndResizeThenOutput(input_path, suffix, X_size, Y_size, output_path)
 
 
-def png_to_jpg(darry_data):
-    import numpy as np
-    for i in range(len(darry_data)):
-        np.delete(darry_data, 3, axis=1)
-    return
-
-
 def list2Array(origin_list):
     import numpy as np
     num = len(origin_list)
     dim = [num] + list(origin_list[0].shape)
-    data_array = np.zeros(dim)
-    for i in range(num):
-        origin_data = origin_list[i]
+    data_array = np.zeros(dim, dtype=origin_list[0].dtype)
+    i = 0 # 新array的索引
+    i1 = -1 # 原list的索引
+    while i1 < num - 1:
+        i1 += 1
+        origin_data = origin_list[i1]
         data_shape = list(origin_data.shape)
         if len(data_shape) != 3:
             continue
         if data_shape[2] == 4:  # 如果为png格式
-            origin_data = png_to_jpg(origin_data)
-        data_array[i] = origin_data
-    return data_array
+            new_data = np.delete(origin_data, 3, 2)
+            data_array[i] = new_data
+        else:
+            data_array[i] = origin_data
+        i += 1
+    return data_array[0:i]
 
 
 def list2ArrayIO(input_path, output_path):

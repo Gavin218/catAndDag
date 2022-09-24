@@ -61,15 +61,30 @@ import cv2
 from CV_Functions import cv_imread
 # file_path = "D:/桌面/test/png_cat.png"
 # img = cv_imread(file_path)
-img = pd.read_pickle("D:/桌面/relatedFile/cat_and_dog/测试集/test_dog_imgs")[66]
-img = cv2.resize(img, (227, 227), interpolation=cv2.INTER_CUBIC)
-cv2.imshow("img", img)
-for i in range(len(img)):
-    np.delete(img, 3, axis=1)
-cv2.imshow("img2", img)
-cv2.waitKey(0)
+# img = pd.read_pickle("D:/桌面/relatedFile/cat_and_dog/测试集2/test_dog_imgs")[66]
+# img = cv2.resize(img, (227, 227), interpolation=cv2.INTER_CUBIC)
+# cv2.imshow("img", img)
+# for i in range(len(img)):
+#     np.delete(img, 3, axis=1)
+# cv2.imshow("img2", img)
+# cv2.waitKey(0)
 
 # x1 = np.array([[[103, 112, 86], [109, 116, 95]], [[123, 100, 34], [163, 112, 90]], [[153, 122, 16], [123, 54, 33]]])
 # x2 = x1[0:2]
 # t = 2
+
+img = pd.read_pickle("D:/桌面/relatedFile/cat_and_dog/训练集/train_cat_imgs")[87]
+img2 = pd.read_pickle("D:/桌面/relatedFile/cat_and_dog/训练集2/train_cat_imgs")[86]
+# img2 = np.delete(img, 3, 2)
+cv2.imshow("img", img)
+cv2.imshow("img2", img2)
+cv2.waitKey(0)
+
+print(img.dtype)
+print(img2.dtype)
+
+# x = np.array([[0, 2, 3], [4,5,6], [2,6,8]])
+# y = x[0:2]
+# print(x)
+# print(y)
 
