@@ -11,7 +11,7 @@ def cv_imread(file_path):
     cv_img = cv2.imdecode(np.fromfile(file_path, dtype=np.uint8), -1)
     return cv_img
 
-file_path = "D:/桌面/cat.jpg"
+# file_path = "D:/桌面/cat.jpg"
 # img = cv2.imread("D:/桌面/cat.jpg")
-img = cv_imread(file_path)
-print(img.shape)
+# img = cv_imread(file_path)
+# print(img.shape)

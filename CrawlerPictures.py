@@ -132,11 +132,11 @@ if __name__ == '__main__':
     # 2、关闭多余的连接
     s.keep_alive = False
     # 每次请求图片数量
-    size = 100
+    size = 50
     # 目标数量
-    target_num = 1000
+    target_num = 200
     base_path = 'D:/桌面/relatedFile/'
-    words = '狗子'
+    words = '宠物猫'
     # 百度定义的图片大小范围取值 1~9，值越大图片越大; 0-表示任意
     z = 0
     # 宽度

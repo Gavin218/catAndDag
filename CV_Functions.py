@@ -9,3 +9,4 @@ def cv_imread(file_path):
     # 可以使用中文路径读取图片
     cv_img = cv2.imdecode(np.fromfile(file_path, dtype=np.uint8), -1)
     return cv_img
+
