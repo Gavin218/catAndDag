@@ -47,8 +47,7 @@ def list2Array(origin_list):
         if len(data_shape) != 3:
             continue
         if data_shape[2] == 4:  # 如果为png格式
-            new_data = np.delete(origin_data, 3, 2)
-            data_array[i] = new_data
+            data_array[i] = np.delete(origin_data, 3, 2)
         else:
             data_array[i] = origin_data
         i += 1
@@ -65,8 +64,57 @@ def list2ArrayIO(input_path, output_path):
     print("已成功存入指定文件！")
     return 0
 
-input_path = "D:/桌面/relatedFile/cat_and_dog/训练集/train_cat_imgs"
-output_path = "D:/桌面/relatedFile/cat_and_dog/训练集2/train_cat_imgs"
-list2ArrayIO(input_path, output_path)
+# input_path = "D:/桌面/relatedFile/cat_and_dog/训练集/train_cat_imgs"
+# output_path = "D:/桌面/relatedFile/cat_and_dog/训练集2/train_cat_imgs"
+# list2ArrayIO(input_path, output_path)
+
+#将darry文件转换为可直接训练的Tensor张量的batch形式(如文件为单一存储，可输入sheet = -1)
+def darryFileToTfFile(path, batchSize):
+    import pandas as pd
+    import tensorflow as tf
+    import numpy as np
+    dataList = pd.read_pickle(path)
+    tf_data = tf.cast(dataList, dtype=tf.int32)
+    train_db = tf.data.Dataset.from_tensor_slices(tf_data)
+    train_db = train_db.shuffle(batchSize * 5).batch(batchSize)
+    return train_db
+
+
+def darryFileToTfFileAngGiveTag(path, batchSize):
+    import pandas as pd
+    import tensorflow as tf
+    import numpy as np
+    dataList = pd.read_pickle(path)
+    tagList = np.full((len(dataList), 2), [1, 0])
+    tf_data = tf.cast(dataList, dtype=tf.int32)
+    tf_tag = tf.cast(tagList, dtype=tf.int32)
+    train_db = tf.data.Dataset.from_tensor_slices((tf_data, tf_tag))
+    train_db = train_db.shuffle(batchSize * 5).batch(batchSize)
+    return train_db
+
+#将darry文件转换为可直接训练的Tensor张量的batch形式(如文件为单一存储，可输入sheet = -1)
+def mergeDiffDataAndGiveTags(pathList, batchSize):
+    import pandas as pd
+    import tensorflow as tf
+    import numpy as np
+    tf.random.set_seed(44)
+    n = len(pathList)
+    dataList = []
+    tagList = []
+    for i in range(len(pathList)):
+        newTag = [0] * n
+        newTag[i] = 1
+        if i == 0:
+            dataList = pd.read_pickle(pathList[i])
+            tagList = np.full((len(dataList), n), newTag)
+        else:
+            dataTmp = pd.read_pickle(pathList[i])
+            dataList = np.vstack((dataList, dataTmp))
+            tagList = np.vstack((tagList, np.full((len(dataTmp), n), newTag)))
+    tf_data = tf.cast(dataList, dtype=tf.int32)
+    tf_tag = tf.cast(tagList, dtype=tf.float32)
+    train_db = tf.data.Dataset.from_tensor_slices((tf_data, tf_tag))
+    train_db = train_db.shuffle(batchSize * 5).batch(batchSize)
+    return train_db
 
 

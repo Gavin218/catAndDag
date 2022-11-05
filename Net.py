@@ -3,6 +3,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.layers import Conv2D, MaxPool2D, Dropout, BatchNormalization, Activation, Flatten, Dense
 from tensorflow.keras import Model, models
+tf.random.set_seed(44)
 
 
 class AE(keras.Model):
@@ -54,7 +55,8 @@ class AlexNet(keras.Model):
             Dropout(0.5, name='Dropout_7'),
 
             # 第八层 全连接
-            Dense(units=1000, activation='softmax', name='Output_8')
+            # Dense(units=1000, activation='softmax', name='Output_8')
+            Dense(units=2, activation='softmax', name='Output_8')
         ])
 
     def call(self, inputs):
@@ -100,6 +102,24 @@ def AlexNet8(inputs):
     outputs = Dense(units=1000, activation='softmax', name='Output_8')(x)
 
     return outputs
+
+
+class AlexNetTest(keras.Model):
+    def __init__(self):
+        super(AlexNetTest, self).__init__()
+        # 创建 Encoders 网络
+        self.encoder = keras.Sequential([
+            # 第一层：卷积--> 激活 --> 归一化 --> 最大池化
+            Conv2D(filters=96, kernel_size=11, strides=4, name='Conv2D_1', activation=tf.nn.relu),
+            BatchNormalization(name='BN_1'),
+            MaxPool2D(pool_size=(3, 3), strides=2, name='MaxPool2D_1'),
+            Flatten(),
+            Dense(units=2, activation='softmax', name='Output_8')
+        ])
+
+    def call(self, inputs):
+        h = self.encoder(inputs)
+        return h
 
 
 # 第零层，输入层
