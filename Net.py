@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.layers import Conv2D, MaxPool2D, Dropout, BatchNormalization, Activation, Flatten, Dense
 from tensorflow.keras import Model, models
-tf.random.set_seed(44)
+# tf.random.set_seed(44)
 
 
 class AE(keras.Model):

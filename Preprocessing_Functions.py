@@ -97,7 +97,7 @@ def mergeDiffDataAndGiveTags(pathList, batchSize):
     import pandas as pd
     import tensorflow as tf
     import numpy as np
-    tf.random.set_seed(44)
+    # tf.random.set_seed(44)
     n = len(pathList)
     dataList = []
     tagList = []
@@ -111,10 +111,32 @@ def mergeDiffDataAndGiveTags(pathList, batchSize):
             dataTmp = pd.read_pickle(pathList[i])
             dataList = np.vstack((dataList, dataTmp))
             tagList = np.vstack((tagList, np.full((len(dataTmp), n), newTag)))
-    tf_data = tf.cast(dataList, dtype=tf.int32)
-    tf_tag = tf.cast(tagList, dtype=tf.float32)
+    tf_data = 2 * tf.convert_to_tensor(dataList, dtype=tf.float32) / 255. - 1
+    tf_tag = tf.cast(tagList, dtype=tf.int32)
     train_db = tf.data.Dataset.from_tensor_slices((tf_data, tf_tag))
-    train_db = train_db.shuffle(batchSize * 5).batch(batchSize)
+    train_db = train_db.shuffle(100).batch(batchSize)
     return train_db
 
-
+# 与上述函数功能基本相同 不同之处在于让tf自行实现one-hot编码
+def mergeDiffDataAndGiveTags2(pathList, batchSize):
+    import pandas as pd
+    import tensorflow as tf
+    import numpy as np
+    # tf.random.set_seed(44)
+    n = len(pathList)
+    dataList = []
+    tagList = []
+    for i in range(n):
+        if i == 0:
+            dataList = pd.read_pickle(pathList[i])
+            tagList = [0] * len(dataList)
+        else:
+            dataTmp = pd.read_pickle(pathList[i])
+            dataList = np.vstack((dataList, dataTmp))
+            tagList += [i] * len(dataTmp)
+    tf_data = 2 * tf.convert_to_tensor(dataList, dtype=tf.float32) / 255. - 1
+    tf_tag = tf.convert_to_tensor(tagList, dtype=tf.int32) # 转换为整形张量
+    tf_tag = tf.one_hot(tf_tag, depth=n) # one-hot 编码
+    train_db = tf.data.Dataset.from_tensor_slices((tf_data, tf_tag))
+    train_db = train_db.shuffle(500).batch(batchSize)
+    return train_db
